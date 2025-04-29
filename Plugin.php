@@ -13,19 +13,16 @@
 
 class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
 {
-    /* 激活插件方法 */
-    public static function activate()
+        public static function activate()
     {
         Typecho_Plugin::factory('Widget_Archive')->beforeRender = array('QzMaintenanceMode_Plugin', 'checkMaintenance');
     }
 
-    /* 禁用插件方法 */
-    public static function deactivate(){}
+        public static function deactivate(){}
 
-    /* 插件配置方法 */
-    public static function config(Typecho_Widget_Helper_Form $form)
+        public static function config(Typecho_Widget_Helper_Form $form)
     {
-        // 基本设置
+        
         $enable = new Typecho_Widget_Helper_Form_Element_Radio(
             'enable',
             array('1' => '启用', '0' => '禁用'),
@@ -34,7 +31,7 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         );
         $form->addInput($enable);
 
-        // 白名单设置
+        
         $whitelistEnable = new Typecho_Widget_Helper_Form_Element_Radio(
             'whitelistEnable',
             array('1' => '启用', '0' => '禁用'),
@@ -43,7 +40,7 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         );
         $form->addInput($whitelistEnable);
 
-        // IP白名单
+        
         $ipWhitelist = new Typecho_Widget_Helper_Form_Element_Textarea(
             'ipWhitelist',
             NULL,
@@ -53,7 +50,7 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         );
         $form->addInput($ipWhitelist);
 
-        // URL白名单
+        
         $urlWhitelist = new Typecho_Widget_Helper_Form_Element_Textarea(
             'urlWhitelist',
             NULL,
@@ -82,7 +79,7 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         );
         $form->addInput($endTime);
 
-        // 维护前内容
+        
         $preTitle = new Typecho_Widget_Helper_Form_Element_Text(
             'preTitle',
             NULL,
@@ -99,7 +96,7 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         );
         $form->addInput($preContent);
 
-        // 维护中内容
+        
         $maintenanceTitle = new Typecho_Widget_Helper_Form_Element_Text(
             'maintenanceTitle',
             NULL,
@@ -116,7 +113,7 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         );
         $form->addInput($maintenanceContent);
 
-        // 维护后内容
+        
         $postTitle = new Typecho_Widget_Helper_Form_Element_Text(
             'postTitle',
             NULL,
@@ -133,11 +130,11 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         );
         $form->addInput($postContent);
 
-        // 其他设置
+        
         $websiteName = new Typecho_Widget_Helper_Form_Element_Text(
             'websiteName',
             NULL,
-            '青竹小轩丨网站例行维护中...',
+            '网站例行维护中...',
             _t('网站名称')
         );
         $form->addInput($websiteName);
@@ -145,23 +142,21 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         $icpNumber = new Typecho_Widget_Helper_Form_Element_Text(
             'icpNumber',
             NULL,
-            '豫ICP备2024102831号-1',
+            '京ICP备2099000000号-1',
             _t('ICP备案号')
         );
         $form->addInput($icpNumber);
     }
 
-    /* 个人用户的配置方法 */
-    public static function personalConfig(Typecho_Widget_Helper_Form $form){}
+        public static function personalConfig(Typecho_Widget_Helper_Form $form){}
 
-    /* 检查IP是否在白名单中 */
-    private static function isIpAllowed($ip, $whitelist)
+        private static function isIpAllowed($ip, $whitelist)
     {
         $whitelist = array_map('trim', explode("\n", $whitelist));
         
         foreach ($whitelist as $allowed) {
             if (strpos($allowed, '/') !== false) {
-                // CIDR格式检查
+                
                 list($subnet, $mask) = explode('/', $allowed);
                 $subnet = ip2long($subnet);
                 $ip = ip2long($ip);
@@ -171,15 +166,14 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
                     return true;
                 }
             } elseif ($ip === $allowed) {
-                // 精确IP匹配
+                
                 return true;
             }
         }
         return false;
     }
 
-    /* 检查URL是否在白名单中 */
-    private static function isUrlAllowed($requestUrl, $whitelist)
+        private static function isUrlAllowed($requestUrl, $whitelist)
     {
         $whitelist = array_map('trim', explode("\n", $whitelist));
         
@@ -191,8 +185,7 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         return false;
     }
 
-    /* 获取客户端真实IP */
-    private static function getClientIp()
+        private static function getClientIp()
     {
         $ip = $_SERVER['REMOTE_ADDR'];
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -203,50 +196,49 @@ class QzMaintenanceMode_Plugin implements Typecho_Plugin_Interface
         return $ip;
     }
 
-    /* 检查维护状态 */
-    public static function checkMaintenance($archive)
+        public static function checkMaintenance($archive)
     {
         $options = Helper::options()->plugin('QzMaintenanceMode');
 
-        // 检查是否为管理员，若是则直接放行
+        
         $user = Typecho_Widget::widget('Widget_User');
         if ($user->hasLogin() && $user->pass('administrator', true)) {
             return;
         }
         
-        // 检查白名单
+        
         if ($options->whitelistEnable) {
-            // 检查IP白名单
+            
             $clientIp = self::getClientIp();
             if (self::isIpAllowed($clientIp, $options->ipWhitelist)) {
-                return; // IP在白名单中，直接放行
+                return; 
             }
             
-            // 检查URL白名单
+            
             $requestUrl = $_SERVER['REQUEST_URI'];
             if (self::isUrlAllowed($requestUrl, $options->urlWhitelist)) {
-                return; // URL在白名单中，直接放行
+                return; 
             }
         }
 
         if (!$options->enable) {
             return;
         }
-        date_default_timezone_set('Asia/Shanghai'); // 设置中国时区
+        date_default_timezone_set('Asia/Shanghai'); 
 
         $now = new DateTime();
         $startTime = new DateTime($options->startTime);
         $endTime = new DateTime($options->endTime);
 
-        // 维护前
+        
         if ($now < $startTime) {
             die('维护前');
         } 
-        // 维护中
+        
         elseif ($now >= $startTime && $now <= $endTime) {
-            // 获取用户组件实例
+            
 
-                //-------------------- 插件输出主要变量内容 Start --------------------
+                
 $scripttag = '
 const apiResponse = {
     "domain": "0.0.0.0",
@@ -265,29 +257,10 @@ const apiResponse = {
 
 include __DIR__ .'/assets/index.php';
 
-/*
-//-------------------- 插件输出主要变量内容 End --------------------
 
-//-------------------- 维护页面模板 Start --------------------
-//读取html
-$original = file_get_contents(__DIR__ ."/assets/index.html");
-
-//替换 contdata 数据变量
-$search = "contdata";
-$replace = $scripttag;
-$result = str_replace($search, $replace, $original);
-
-//替换 scriptdata 数据变量
-$search = "scriptdata";
-$replace = file_get_contents(__DIR__ ."/assets/script.js");
-$result = str_replace($search, $replace, $result);
-
-echo $result;
-*/
-//-------------------- 维护页面模板 End --------------------
             exit;
         } 
-        // 维护后
+        
         elseif ($now > $endTime) { return;}
        
     }
