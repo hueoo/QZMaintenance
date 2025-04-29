@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"></title>
+    <link rel="stylesheet" href="/usr/plugins/MaintenanceMode/assets/css2.css?family=Orbitron:wght@500&display=swap">
+    <link rel="stylesheet" href="/usr/plugins/MaintenanceMode/assets/all.min.css">
+    <link rel="stylesheet" href="/usr/plugins/MaintenanceMode/assets/style.css">
+</head>
+<body>
+    <div class="main-frame">
+        <h1>SYSTEM<br>MAINTENANCE</h1>
+        <div class="status-info" id="statusInfo">
+            <div class="warning-message breathing">
+               <span id="maintenanceStart"></span>
+            </div>
+            <p class="info-text" id="infoText"></p>
+        </div>
+        <div class="status-container">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="percentage" id="percentage"></div>
+        </div>
+        <div class="countdown-container warning-message breathing" id="countdown">
+            <div class="time-display">
+                <div class="time-group">
+                    <span class="time-block days">--</span>
+                </div>
+                <span class="time-separator">:</span>
+                <span class="time-block hours">--</span>
+                <span class="time-separator">:</span>
+                <span class="time-block minutes">--</span>
+                <span class="time-separator">:</span>
+                <span class="time-block seconds">--</span>
+            </div>
+        </div>
+        <div class="completion-message" style="display:none;">
+            <svg t="1745592230444" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3049" width="32" height="32"><path d="M511.872032 1024a511.872032 511.872032 0 1 1 511.872032-511.872032 511.872032 511.872032 0 0 1-511.872032 511.872032z m-114.147463-310.962259a53.490627 53.490627 0 0 0 75.501125 0l323.247188-323.247189a53.490627 53.490627 0 0 0-75.501125-76.780804L433.043739 597.610597l-127.968008-127.968008a53.490627 53.490627 0 1 0-76.780805 75.501125z" fill="#41CC8B" p-id="3050"></path></svg>
+            <span>维护已完成！</span>
+        </div><br>
+        <br><br><br><br>
+        <div class="icp" id="icp">
+        </div>
+    </div>
+    <script>contdata</script>
+    <script>scriptdata</script>
+</body>
+</html>
